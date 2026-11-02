@@ -430,3 +430,16 @@ npm run test:e2e
 ```
 
 The data-entry instructions above were checked against the controllers, DTOs, services, seed script, and frontend implementation. Writing documentation does not require running the seed script or changing database records.
+
+## Railway error: `crypto is not defined`
+
+This API uses NestJS 11, which requires Node 20 or newer. Railway's Node 18 runtime can fail while initializing `@nestjs/typeorm` with `ReferenceError: crypto is not defined`. The project now targets **Node 22** using `engines.node` in `package.json` and `.nvmrc`.
+
+1. Commit and push the API's `package.json`, `package-lock.json`, and `.nvmrc` changes to the branch Railway builds.
+2. In the Railway **API service**, inspect Variables. If `NIXPACKS_NODE_VERSION` is set to `18`, change it to `22` (or remove it so the package engine applies).
+3. Redeploy with a fresh build; restarting the old deployment keeps its old Node runtime. Confirm the build selects Node 22. Ensure Railway's root directory points to the API project so it sees this package file.
+4. Keep `ADMIN_PASSWORD_HASH`, `DATABASE_URL`, `NODE_ENV=production`, and `CORS_ORIGIN` configured on that API service.
+
+The npm warning about `production` versus `--omit=dev` is separate from the crash. Do not omit build-time dependencies before compiling Nest. No crypto polyfill or change to database data is needed. [Nixpacks Node version selection](https://nixpacks.com/docs/providers/node#setup).
+
+For local development with nvm, run `nvm install` and `nvm use` in this API directory to select Node 22.
