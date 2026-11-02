@@ -26,6 +26,9 @@ export class Wine {
   @Column()
   wineryState: string;
 
+  @Column({ nullable: true })
+  ava: string;
+
   @Column()
   wineryAddress: string;
 

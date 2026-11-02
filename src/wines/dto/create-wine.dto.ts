@@ -24,6 +24,10 @@ export class CreateWineDto {
   @IsString()
   wineryState: string;
 
+  @IsOptional()
+  @IsString()
+  ava?: string;
+
   @IsString()
   wineryAddress: string;
 
