@@ -1,3 +1,4 @@
+import { AuthModule } from './auth/auth.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -21,11 +22,13 @@ import { VarietalMapping } from './varietal-mappings/entities/varietal-mapping.e
         url: configService.get<string>('DATABASE_URL'),
         entities: [Wine, VarietalMapping],
         synchronize: configService.get<string>('NODE_ENV') !== 'production',
-        ssl: configService.get<string>('NODE_ENV') === 'production'
-          ? { rejectUnauthorized: false }
-          : false,
+        ssl:
+          configService.get<string>('NODE_ENV') === 'production'
+            ? { rejectUnauthorized: false }
+            : false,
       }),
     }),
+    AuthModule,
     WinesModule,
     VarietalMappingsModule,
   ],
